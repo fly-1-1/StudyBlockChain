@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/binary"
+	"encoding/gob"
 	"log"
 	"time"
 )
@@ -51,7 +52,38 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 		Hash:       []byte{},
 		Data:       []byte(data),
 	}
-	block.SetHash()
+	//block.SetHash()
+	//创建pow对象
+	pow := NewProofOfWork(&block)
+	hash, nonce := pow.Run()
+
+	//根据挖矿结果对区块数据进行更新
+	block.Hash = hash
+	block.Nonce = nonce
+	return &block
+}
+
+// Serialize 序列化
+func (block *Block) Serialize() []byte {
+	var buffer bytes.Buffer
+	encoder := gob.NewEncoder(&buffer)
+	err := encoder.Encode(&block)
+	if err != nil {
+		log.Panic("编码出错")
+	}
+	return buffer.Bytes()
+}
+
+// DeSerialize 反序列化
+func DeSerialize(data []byte) *Block {
+	//TODO
+	decoder := gob.NewDecoder(bytes.NewReader(data))
+
+	var block Block
+	err := decoder.Decode(&block)
+	if err != nil {
+		log.Panic("解码出错")
+	}
 	return &block
 }
 
