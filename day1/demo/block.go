@@ -60,6 +60,7 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 	//根据挖矿结果对区块数据进行更新
 	block.Hash = hash
 	block.Nonce = nonce
+
 	return &block
 }
 
@@ -84,6 +85,7 @@ func DeSerialize(data []byte) *Block {
 	if err != nil {
 		log.Panic("解码出错")
 	}
+
 	return &block
 }
 
