@@ -7,6 +7,7 @@ import (
 	"log"
 )
 
+
 // Transaction 1 定义交易结构
 type Transaction struct {
 	TXID      []byte     //交易ID
