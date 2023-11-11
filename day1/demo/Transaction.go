@@ -7,6 +7,8 @@ import (
 	"log"
 )
 
+const reward = 12.5
+
 // Transaction 1 定义交易结构
 type Transaction struct {
 	TXID      []byte     //交易ID
@@ -45,7 +47,16 @@ func (tx *Transaction) SetHash() {
 	tx.TXID = hash[:]
 }
 
-//2 提供创建交易方法
+// NewCoinbaseTX  提供创建交易方法 (挖矿交易)
+func NewCoinbaseTX(address string, data string) *Transaction {
+	//挖矿交易的特点 1只有一个input 2 无需引用交易ID 3 无需引用index 4 矿工由于挖矿时无需指定签名 这个sig字段一般填写矿池的名字
+	input := TXInput{[]byte{}, -1, data}
+	output := TXOutput{reward, address}
+	//对于挖矿交易来说 只有一个input和output
+	tx := Transaction{[]byte{}, []TXInput{input}, []TXOutput{output}}
+	tx.SetHash()
+	return &tx
+}
 
 //3 创建挖矿交易
 
