@@ -45,11 +45,7 @@ func NewBlockChain(address string) *BlockChain {
 			//创建一个创世块,并作为第一个区块添加到区块链中
 			//hash作为key block字节流数据作为value
 			genesisBlock := GenesisBlock(address)
-<<<<<<< Updated upstream
 			fmt.Printf("genesisBlock: %s\n", genesisBlock)
-=======
-			//fmt.Printf("genesisBlock: %s\n", genesisBlock)
->>>>>>> Stashed changes
 			bucket.Put(genesisBlock.Hash, genesisBlock.Serialize())
 			bucket.Put([]byte("LastHashKey"), genesisBlock.Hash)
 			lastHash = genesisBlock.Hash
@@ -149,13 +145,8 @@ func (bc *BlockChain) FindUTXOs(address string) []TXOutput {
 			}
 		}
 		if len(block.PrevHash) == 0 {
-<<<<<<< Updated upstream
 			break
 			fmt.Printf("区块打印完成!")
-=======
-			fmt.Printf("区块打印完成!\n")
-			break
->>>>>>> Stashed changes
 		}
 	}
 	return UTXO
@@ -163,85 +154,8 @@ func (bc *BlockChain) FindUTXOs(address string) []TXOutput {
 
 func (bc *BlockChain) FindNeedUTXOs(from string, amount float64) (map[string][]uint64, float64) {
 	//找到合理的utxos集合
-<<<<<<< Updated upstream
 	var utxos map[string][]uint64
 	//找到的utxos里面包含的钱的总数
 	var calc float64
-=======
-	utxos := make(map[string][]uint64)
-	//标识已经消耗过的utxo
-	spentOutputs := make(map[string][]int64)
-	//找到的utxos里面包含的钱的总数
-	var calc float64
-
-	//----------------------------------
-	it := bc.NewIterator()
-	for {
-		block := it.Next()
-		for _, tx := range block.Transactions {
-			fmt.Printf("当前的交易Id: %x\n", tx.TXID)
-		OUTPUT:
-			//遍历output 找到和自己相关的utxo(在添加output之前是否已经消耗过)
-			for i, output := range tx.TXOutputs {
-				fmt.Printf("当前的Index: %d\n", i)
-				//过滤将所有消耗过得outputs和当前的所即将添加的outputs对比一下 如果相同则跳过 否则添加
-				//如果当前的交易ID存在于已经标识的map 说明这个交易中 有消耗过的output
-				if spentOutputs[string(tx.TXID)] != nil {
-					for _, j := range spentOutputs[string(tx.TXID)] {
-						if int64(i) == j {
-							//说明当前准备的output已经用过了,不用再添加
-							continue OUTPUT
-						}
-					}
-				}
-				//这个output和目标地址相同 满足条件 加到返回utxo数组中
-				if output.PukKeyHash == from {
-					//UTXO = append(UTXO, output)
-					//找到需要的最少的UTXO //TODO
-					//把UTXO加进来
-					//统计一下当前UTXO的总额
-					//比较一下是否满足转账需求 满足直接返回utxos calc 不满足继续统计
-					if calc < amount {
-						//array := utxos[string(tx.TXID)]
-						//array = append(array, uint64(i))
-						utxos[string(tx.TXID)] = append(utxos[string(tx.TXID)], uint64(i))
-						calc += output.Value
-
-						//满足条件
-						if calc >= amount {
-							fmt.Printf("找到了满足的金额:%f\n", calc)
-							return utxos, calc
-						}
-					} else {
-						fmt.Printf("不满足转账金额,当前总额%f,目标金额%f", calc, amount)
-					}
-
-				}
-			}
-			//如果当前是coinbase交易直接跳过
-			if !tx.IsCoinBase() {
-				//遍历input  找到自己花费过的utxo集合(把自己消费过得标识出来)
-				for _, input := range tx.TXInputs {
-					//判断当下input和目标是否一致 如果相同说明是目标消耗过得output,加进去
-					if input.Sig == from {
-						//spentOutputs := make(map[string][]int64)
-						indexArray := spentOutputs[string(input.TXid)]
-						indexArray = append(indexArray, input.Index)
-						//map[2222]=[]int64{0}
-						//map[3333]=[]int64{0,1}
-					}
-				}
-			} else {
-				fmt.Println("这是coinbase不做input遍历")
-			}
-		}
-		if len(block.PrevHash) == 0 {
-			break
-			fmt.Printf("区块打印完成!")
-		}
-	}
-	//--------------------------------
-
->>>>>>> Stashed changes
 	return utxos, calc
 }
