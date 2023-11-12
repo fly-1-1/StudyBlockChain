@@ -23,6 +23,7 @@ func (bc *BlockChain) NewIterator() *BlockChainIterator {
 func (it *BlockChainIterator) Next() *Block {
 	var block *Block
 	it.db.View(func(tx *bolt.Tx) error {
+
 		bucket := tx.Bucket([]byte(blockBucket))
 		if bucket == nil {
 			log.Panic("迭代器遍历bucket不应该为空,请检查")
