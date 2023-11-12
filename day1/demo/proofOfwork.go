@@ -32,6 +32,7 @@ func (pow *ProofOfWork) Run() ([]byte, uint64) {
 	var nonce uint64
 	block := pow.block
 	var hash [32]byte
+	fmt.Println("开始挖矿...")
 	for {
 		// 拼装数据 (区块数据 变化的随机数)
 		tmp := [][]byte{
@@ -41,7 +42,8 @@ func (pow *ProofOfWork) Run() ([]byte, uint64) {
 			Uint64ToByte(block.TimeStamp),
 			Uint64ToByte(block.Difficulty),
 			Uint64ToByte(nonce),
-			block.Data,
+			//只对区块头做哈希值 区块体通过merkelRoot产生影响
+			//block.Data,
 		}
 		//二维切片数组连接 返回一位数组切片
 		blockInfo := bytes.Join(tmp, []byte{})
