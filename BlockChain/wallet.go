@@ -34,7 +34,19 @@ func NewWallet() *Wallet {
 // NewAddress 生成地址
 func (w *Wallet) NewAddress() string {
 	pubKey := w.PubKey
-	hash := sha256.Sum256(pubKey)
+	rip160hashValue := HashPubKey(pubKey)
+	version := byte(00)
+	payload := append([]byte{version}, rip160hashValue...)
+	checkCode := CheckSum(payload)
+	//25字节数据
+	payload = append(payload, checkCode...)
+	//btcd BTC全节点源码
+	address := base58.Encode(payload)
+	return address
+}
+
+func HashPubKey(data []byte) []byte {
+	hash := sha256.Sum256(data)
 	//编码器
 	rip160hasher := ripemd160.New()
 	_, err := rip160hasher.Write(hash[:])
@@ -42,16 +54,14 @@ func (w *Wallet) NewAddress() string {
 		log.Panic(err)
 	}
 	rip160hashValue := rip160hasher.Sum(nil)
-	version := byte(00)
-	payload := append([]byte{version}, rip160hashValue...)
+	return rip160hashValue
+}
+
+func CheckSum(data []byte) []byte {
 	//checksum
-	hash1 := sha256.Sum256(payload)
+	hash1 := sha256.Sum256(data)
 	hash2 := sha256.Sum256(hash1[:])
 	//字节校验码
 	checkCode := hash2[:4]
-	//25字节数据
-	payload = append(payload, checkCode...)
-	//btcd BTC全节点源码
-	address := base58.Encode(payload)
-	return address
+	return checkCode
 }
