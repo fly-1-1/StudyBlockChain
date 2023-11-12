@@ -45,11 +45,7 @@ func NewBlockChain(address string) *BlockChain {
 			//创建一个创世块,并作为第一个区块添加到区块链中
 			//hash作为key block字节流数据作为value
 			genesisBlock := GenesisBlock(address)
-<<<<<<< Updated upstream
-			fmt.Printf("genesisBlock: %s\n", genesisBlock)
-=======
 			//fmt.Printf("genesisBlock: %s\n", genesisBlock)
->>>>>>> Stashed changes
 			bucket.Put(genesisBlock.Hash, genesisBlock.Serialize())
 			bucket.Put([]byte("LastHashKey"), genesisBlock.Hash)
 			lastHash = genesisBlock.Hash
@@ -149,13 +145,8 @@ func (bc *BlockChain) FindUTXOs(address string) []TXOutput {
 			}
 		}
 		if len(block.PrevHash) == 0 {
-<<<<<<< Updated upstream
-			break
-			fmt.Printf("区块打印完成!")
-=======
 			fmt.Printf("区块打印完成!\n")
 			break
->>>>>>> Stashed changes
 		}
 	}
 	return UTXO
@@ -163,11 +154,6 @@ func (bc *BlockChain) FindUTXOs(address string) []TXOutput {
 
 func (bc *BlockChain) FindNeedUTXOs(from string, amount float64) (map[string][]uint64, float64) {
 	//找到合理的utxos集合
-<<<<<<< Updated upstream
-	var utxos map[string][]uint64
-	//找到的utxos里面包含的钱的总数
-	var calc float64
-=======
 	utxos := make(map[string][]uint64)
 	//标识已经消耗过的utxo
 	spentOutputs := make(map[string][]int64)
@@ -242,6 +228,5 @@ func (bc *BlockChain) FindNeedUTXOs(from string, amount float64) (map[string][]u
 	}
 	//--------------------------------
 
->>>>>>> Stashed changes
 	return utxos, calc
 }
