@@ -4,7 +4,7 @@ func main() {
 
 	//block := NewBlock("A->B 1 BTC", []byte{})
 
-	bc := NewBlockChain()
+	bc := NewBlockChain("333")
 	cil := CLI{bc}
 	cil.Run()
 
