@@ -25,8 +25,8 @@ type Block struct {
 	Nonce uint64
 	//当前区块哈希(BTC区块中无当前区块哈希)
 	Hash []byte
-	//数据
-	Data []byte
+	//真实的交易数组
+	Transactions []*Transaction
 }
 
 // Uint64ToByte 将uint转为[]byte
@@ -41,7 +41,7 @@ func Uint64ToByte(num uint64) []byte {
 }
 
 // NewBlock 创建区块
-func NewBlock(data string, prevBlockHash []byte) *Block {
+func NewBlock(txs []*Transaction, prevBlockHash []byte) *Block {
 	block := Block{
 		Version:    00,
 		PrevHash:   prevBlockHash,
@@ -50,8 +50,10 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 		Difficulty: 00, //无效值
 		Nonce:      00, //无效值
 		Hash:       []byte{},
-		Data:       []byte(data),
+		//Data:       []byte(data),
+		Transactions: txs,
 	}
+	block.MerkelRoot = block.MakeMerkelRoot()
 	//block.SetHash()
 	//创建pow对象
 	pow := NewProofOfWork(&block)
@@ -60,7 +62,6 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 	//根据挖矿结果对区块数据进行更新
 	block.Hash = hash
 	block.Nonce = nonce
-
 	return &block
 }
 
@@ -85,13 +86,11 @@ func DeSerialize(data []byte) *Block {
 	if err != nil {
 		log.Panic("解码出错")
 	}
-
 	return &block
 }
 
 // SetHash 生成哈希
 func (block *Block) SetHash() {
-
 	tmp := [][]byte{
 		Uint64ToByte(block.Version),
 		block.PrevHash,
@@ -99,11 +98,16 @@ func (block *Block) SetHash() {
 		Uint64ToByte(block.TimeStamp),
 		Uint64ToByte(block.Difficulty),
 		Uint64ToByte(block.Nonce),
-		block.Data,
 	}
 	//二维切片数组连接 返回一位数组切片
 	blockInfo := bytes.Join(tmp, []byte{})
 	//2 sha256
 	hash := sha256.Sum256(blockInfo)
 	block.Hash = hash[:]
+}
+
+// MakeMerkelRoot 模拟MerkelRoot 对交易数据做简单的拼接 不做二叉树处理
+func (block *Block) MakeMerkelRoot() []byte {
+	//TODO
+	return []byte{}
 }
