@@ -20,7 +20,7 @@ type Wallet struct {
 
 // NewWallet 创建钱包
 func NewWallet() *Wallet {
-	Curve := elliptic.P224()
+	Curve := elliptic.P256()
 	privateKey, err := ecdsa.GenerateKey(Curve, rand.Reader)
 	if err != nil {
 		log.Panic(err)
@@ -48,6 +48,7 @@ func (w *Wallet) NewAddress() string {
 func HashPubKey(data []byte) []byte {
 	hash := sha256.Sum256(data)
 	//编码器
+
 	rip160hasher := ripemd160.New()
 	_, err := rip160hasher.Write(hash[:])
 	if err != nil {
