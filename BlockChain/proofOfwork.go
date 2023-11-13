@@ -7,7 +7,8 @@ import (
 	"math/big"
 )
 
-// 定义一个工作量证明的结构ProofOfWork
+//定义一个工作量证明的结构ProofOfWork
+//
 type ProofOfWork struct {
 	//a. block
 	block *Block
@@ -16,9 +17,9 @@ type ProofOfWork struct {
 	target *big.Int
 }
 
-// 2. 提供创建POW的函数
+//2. 提供创建POW的函数
 //
-// - NewProofOfWork(参数)
+//- NewProofOfWork(参数)
 func NewProofOfWork(block *Block) *ProofOfWork {
 	pow := ProofOfWork{
 		block: block,
