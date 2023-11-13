@@ -5,14 +5,14 @@ import (
 	"time"
 )
 
-// 正向打印
-func (cli *CLI) PrinBlockChain() {
+// PrintBlockChain 正向打印
+func (cli *CLI) PrintBlockChain() {
 	cli.bc.PrintChain()
 	fmt.Printf("打印区块链完成\n")
 }
 
-// 反向打印
-func (cli *CLI) PrinBlockChainReverse() {
+// PrintBlockChainReverse PrinBlockChainReverse 反向打印
+func (cli *CLI) PrintBlockChainReverse() {
 	bc := cli.bc
 	//创建迭代器
 	it := bc.NewIterator()
@@ -74,10 +74,15 @@ func (cli *CLI) Send(from, to string, amount float64, miner, data string) {
 }
 
 func (cli *CLI) NewWallet() {
-	wallet := NewWallet()
-	address := wallet.NewAddress()
-	fmt.Printf("私钥:%v\n", wallet.Private)
-	fmt.Printf("公钥:%v\n", wallet.PubKey)
-	fmt.Printf("地址:%s\n", address)
+	ws := NewWallets()
+	address := ws.CreateWallet()
+	fmt.Printf("地址 %s\n", address)
+}
 
+func (cli *CLI) listAddresses() {
+	ws := NewWallets()
+	addresses := ws.ListAllAddresses()
+	for _, address := range addresses {
+		fmt.Printf("地址 %s\n", address)
+	}
 }
